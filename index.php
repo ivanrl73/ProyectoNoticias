@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+// Validar si el usuario no está autenticado
+if (!isset($_SESSION['usuario'])) {
+    $is_admin = false; // No mostrar el enlace si no está autenticado
+} else {
+    $is_admin = isset($_SESSION['admin']) && $_SESSION['admin'] == 1;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -64,7 +75,10 @@
         <a href="noticias.php">Noticias</a>
         <a href="categorias.php">Categorías</a>
         <a href="usuarios.php">Usuarios</a>
-        <a href="admin.php">Panel Admin</a>
+        <!-- Mostrar el enlace al panel de administración solo si es admin -->
+        <?php if ($is_admin): ?>
+            <a href="admin.php">Panel Admin</a>
+        <?php endif; ?>
     </nav>
     <div class="container">
         <h2>Página Principal</h2>

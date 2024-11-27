@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
             $_SESSION['usuario'] = $user['id'];
-            $_SESSION['is_admin'] = $user['is_admin']; // Guardar si es admin
+            $_SESSION['admin'] = $user['admin']; // Guardar si es admin
             $_SESSION['nombre'] = $user['nombre'];    // Guardar el nombre para personalizar
             header("Location: index.php");
             exit;
