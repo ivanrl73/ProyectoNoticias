@@ -1,29 +1,21 @@
 <?php
 include 'conexion.php';
 $conexion = conectar();
-session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $nombre = $_POST['nombre'];
     $email = $_POST['email'];
-    $password = $_POST['password'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    $query = "SELECT * FROM usuarios WHERE email = ? AND activo = 1";
+    $query = "INSERT INTO usuarios (nombre, email, password, activo) VALUES (?, ?, ?, 1)";
     $stmt = $conexion->prepare($query);
-    $stmt->bind_param('s', $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->bind_param('sss', $nombre, $email, $password);
 
-    if ($result->num_rows == 1) {
-        $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['usuario'] = $user['id'];
-            header("Location: index.php");
-            exit;
-        } else {
-            $error = "Contraseña incorrecta.";
-        }
+    if ($stmt->execute()) {
+        header("Location: login.php");
+        exit;
     } else {
-        $error = "Usuario no encontrado.";
+        $error = "Error al registrar el usuario.";
     }
 }
 ?>
@@ -33,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
+    <title>Registro de Usuario</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -85,11 +77,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             color: red;
             text-align: center;
         }
-        .register-link {
+        .login-link {
             text-align: center;
             margin-top: 10px;
         }
-        .register-link a {
+        .login-link a {
             color: #333;
             text-decoration: none;
         }
@@ -97,17 +89,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="form-container">
-        <h1>Iniciar Sesión</h1>
+        <h1>Registro de Usuario</h1>
         <?php if (!empty($error)): ?>
             <p class="error"><?php echo $error; ?></p>
         <?php endif; ?>
         <form method="POST" action="">
+            <input type="text" name="nombre" placeholder="Nombre completo" required>
             <input type="email" name="email" placeholder="Correo electrónico" required>
             <input type="password" name="password" placeholder="Contraseña" required>
-            <button type="submit">Ingresar</button>
+            <button type="submit">Registrar</button>
         </form>
-        <div class="register-link">
-            <p>¿No tienes cuenta? <a href="registrar_usuario.php">Regístrate aquí</a></p>
+        <div class="login-link">
+            <p>¿Ya tienes cuenta? <a href="login.php">Inicia sesión aquí</a></p>
         </div>
     </div>
 </body>
