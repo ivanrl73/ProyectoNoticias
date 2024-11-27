@@ -17,6 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = $result->fetch_assoc();
         if (password_verify($password, $user['password'])) {
             $_SESSION['usuario'] = $user['id'];
+            $_SESSION['is_admin'] = $user['is_admin']; // Guardar si es admin
+            $_SESSION['nombre'] = $user['nombre'];    // Guardar el nombre para personalizar
             header("Location: index.php");
             exit;
         } else {
@@ -38,11 +40,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-bar {
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            background-color: #444;
+            padding: 10px;
+        }
+        .nav-bar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background 0.3s;
+        }
+        .nav-bar a:hover {
+            background-color: #555;
         }
         .form-container {
             background: #fff;
@@ -51,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
+            margin: 50px auto; /* Espaciado para que esté centrado */
         }
         .form-container h1 {
             margin: 0 0 20px;
@@ -96,6 +113,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </style>
 </head>
 <body>
+    <!-- Barra de navegación arriba -->
+    <div class="nav-bar">
+        <a href="index.php">Inicio</a>
+        <a href="noticias.php">Noticias</a>
+        <a href="categorias.php">Categorías</a>
+        <a href="usuarios.php">Usuarios</a>
+    </div>
+
+    <!-- Formulario de login -->
     <div class="form-container">
         <h1>Iniciar Sesión</h1>
         <?php if (!empty($error)): ?>
