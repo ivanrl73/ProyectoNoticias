@@ -73,7 +73,7 @@ if (!isset($_SESSION['usuario'])) {
         <a href="index.php">Inicio</a>
         <a href="login.php">Iniciar Sesión</a>
         <a href="noticias.php">Noticias</a>
-        <a href="categorias.php">Categorías</a>
+        <a href="categoria.php">Categorías</a>
         <a href="usuarios.php">Usuarios</a>
         <!-- Mostrar el enlace al panel de administración solo si es admin -->
         <?php if ($is_admin): ?>
